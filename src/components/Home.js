@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import imagem from '../imgs/image05.webp';
-import StyledButton from "../styles/StyledButton";
 import StyledTitle from "../styles/StyledTitle";
 import StyledText from "../styles/StyledText";
 import StyledDiv from "../styles/StyledDiv";
@@ -32,4 +31,15 @@ const StyledDescription = styled.span`
 const StyledImg = styled.img`
     max-height: 70vh;
     max-width: 100%;
+`;
+
+const StyledButton = styled.button`
+    width: 210px;
+    height: 48px;
+    background-color: #8C97EA;
+    border: none;
+    border-radius: 10px;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 700;
 `;
