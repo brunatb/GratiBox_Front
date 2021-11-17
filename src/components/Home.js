@@ -12,7 +12,7 @@ export default function Home(){
         <>
             <StyledTitle> Bem vindo ao GratiBox</StyledTitle>
             <StyledDescription>
-                Receba em casa um box com chás, produtos organicos, incensos e muito mais...
+                Receba em casa um box com chás, produtos orgânicos, incensos e muito mais...
             </StyledDescription>
             <StyledImg src={imagem} alt=""/>
             <StyledDiv>
