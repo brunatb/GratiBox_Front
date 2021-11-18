@@ -5,7 +5,8 @@ import StyledButton from "../styles/StyledButton"
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { postSignUp } from "../services/API";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import UserContext from "../context/UserContext";
 
 export default function SignUp(){
     let navigate=useNavigate();
@@ -13,6 +14,11 @@ export default function SignUp(){
     const [email, setEmail]= useState("");
     const [password, setPassword]= useState("");
     const [confirmedPassword, setConfirmedPassword]= useState("");
+    const {login, setLogin} = useContext(UserContext);
+
+    useEffect(()=>{
+        if(login) navigate("/plans")
+    },[login,navigate])
 
     function signUp(e){
         e.preventDefault();

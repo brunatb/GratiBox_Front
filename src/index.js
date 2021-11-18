@@ -6,6 +6,7 @@ import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
 import ResetCss from "./styles/ResetCss";
 
+
 render(
   <BrowserRouter>
   <ResetCss />
@@ -14,9 +15,7 @@ render(
         <Route index element={<Home />} />
         <Route path="sign-up" element={<SignUp/>}/>
         <Route path="sign-in" element={<SignIn/>}/>
-        <Route
-          path="*"
-          element={
+        <Route path="*" element={
             <main style={{ padding: "1rem" }}>
               <p>There's nothing here!</p>
             </main>

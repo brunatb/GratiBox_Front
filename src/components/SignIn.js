@@ -5,12 +5,19 @@ import StyledButton from "../styles/StyledButton"
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { postSignIn } from "../services/API";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import UserContext from "../context/UserContext";
+import { saveToLocalStorage } from "../utils/localStorage";
 
 export default function SignIn(){
     let navigate=useNavigate();
     const [email, setEmail]= useState("");
     const [password, setPassword]= useState("");
+    const {login, setLogin} = useContext(UserContext);
+
+    useEffect(()=>{
+        if(login) navigate("/plans")
+    },[login,navigate])
 
     function signIn(e){
         e.preventDefault();
@@ -18,11 +25,13 @@ export default function SignIn(){
         postSignIn(body)
         .then(res =>{
             alert("Logado com Sucesso");
+            saveToLocalStorage(res.data)
+            setLogin(res.data)
             navigate("/plans")
         })
         .catch(error => {
             if(error.response.status === 401) alert("Senha Incorreta");
-            if(error.response.status === 404) alert("E-mail não cadastrado");
+            else if(error.response.status === 404) alert("E-mail não cadastrado");
             else alert("Erro Desconhecido");
         })
     }
