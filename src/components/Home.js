@@ -6,6 +6,7 @@ import StyledDiv from "../styles/StyledDiv";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import UserContext from "../context/UserContext";
+import StyledDescription from "../styles/StyleDescription";
 
 export default function Home(){
     let navigate=useNavigate();
@@ -29,12 +30,7 @@ export default function Home(){
         </>
     )
 }
-const StyledDescription = styled.span`
-    width: 350px;
-    font-size: 18px;
-    font-weight: 300;
-    line-height: 21.09px;
-`;
+
 const StyledImg = styled.img`
     max-height: 70vh;
     max-width: 100%;

@@ -5,6 +5,7 @@ import Home from "./components/Home";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
 import ResetCss from "./styles/ResetCss";
+import Plans from "./components/Plans"
 
 
 render(
@@ -15,6 +16,7 @@ render(
         <Route index element={<Home />} />
         <Route path="sign-up" element={<SignUp/>}/>
         <Route path="sign-in" element={<SignIn/>}/>
+        <Route path="plans" element={<Plans/>}/>
         <Route path="*" element={
             <main style={{ padding: "1rem" }}>
               <p>There's nothing here!</p>
