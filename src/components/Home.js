@@ -4,9 +4,16 @@ import StyledTitle from "../styles/StyledTitle";
 import StyledText from "../styles/StyledText";
 import StyledDiv from "../styles/StyledDiv";
 import { useNavigate } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import UserContext from "../context/UserContext";
 
 export default function Home(){
     let navigate=useNavigate();
+    const {login} = useContext(UserContext);
+
+    useEffect(()=>{
+        if(login) navigate("/plans")
+    },[login,navigate])
 
     return(
         <>

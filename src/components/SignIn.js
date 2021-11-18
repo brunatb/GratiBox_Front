@@ -4,48 +4,42 @@ import StyledText from "../styles/StyledText"
 import StyledButton from "../styles/StyledButton"
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { postSignUp } from "../services/API";
+import { postSignIn } from "../services/API";
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../context/UserContext";
+import { saveToLocalStorage } from "../utils/localStorage";
 
-export default function SignUp(){
+export default function SignIn(){
     let navigate=useNavigate();
-    const [name, setName]= useState("");
     const [email, setEmail]= useState("");
     const [password, setPassword]= useState("");
-    const [confirmedPassword, setConfirmedPassword]= useState("");
-    const {login} = useContext(UserContext);
+    const {login, setLogin} = useContext(UserContext);
 
     useEffect(()=>{
         if(login) navigate("/plans")
     },[login,navigate])
 
-    function signUp(e){
+    function signIn(e){
         e.preventDefault();
-        if(password !== confirmedPassword) return alert ("Confirmação de Senha Incorreta")
-        const body={name,email,password};
-        postSignUp(body)
+        const body={email,password};
+        postSignIn(body)
         .then(res =>{
-            alert("Conta criada com Sucesso");
-            navigate("/sign-in")
+            alert("Logado com Sucesso");
+            saveToLocalStorage(res.data)
+            setLogin(res.data)
+            navigate("/plans")
         })
         .catch(error => {
-            if(error.response.status === 401) alert("E-mail já cadastrado");
+            if(error.response.status === 401) alert("Senha Incorreta");
+            else if(error.response.status === 404) alert("E-mail não cadastrado");
             else alert("Erro Desconhecido");
         })
     }
     return(
         <>
             <StyledTitle> Bem vindo ao GratiBox</StyledTitle>
-            <StyledForm onSubmit={signUp}>
+            <StyledForm onSubmit={signIn}>
                 <div className="inputs">
-                    <input
-                        type='text'
-                        placeholder='Nome'
-                        value={name}
-                        onChange={(e)=>{setName(e.target.value)}}
-                        required
-                    />
                     <input
                         type='email'
                         placeholder='Email'
@@ -60,17 +54,10 @@ export default function SignUp(){
                         onChange={(e)=>{setPassword(e.target.value)}}
                         required
                     />
-                    <input
-                        type='password'
-                        placeholder='Confirmar senha'
-                        value={confirmedPassword}
-                        onChange={(e)=>{setConfirmedPassword(e.target.value)}}
-                        required
-                    />
                 </div>
                 <StyledDiv>
-                    <StyledButton type='submit'>Cadastrar</StyledButton>
-                    <StyledText onClick={()=> navigate("/sign-in")}>Já sou grato</StyledText>
+                    <StyledButton type='submit'>Login</StyledButton>
+                    <StyledText onClick={()=> navigate("/sign-up")}>Ainda não sou grato</StyledText>
                 </StyledDiv>
             </StyledForm>
         </>
