@@ -14,7 +14,7 @@ export default function SignUp(){
     const [email, setEmail]= useState("");
     const [password, setPassword]= useState("");
     const [confirmedPassword, setConfirmedPassword]= useState("");
-    const {login, setLogin} = useContext(UserContext);
+    const {login} = useContext(UserContext);
 
     useEffect(()=>{
         if(login) navigate("/plans")

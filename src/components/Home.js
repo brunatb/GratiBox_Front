@@ -9,7 +9,7 @@ import UserContext from "../context/UserContext";
 
 export default function Home(){
     let navigate=useNavigate();
-    const {login, setLogin} = useContext(UserContext);
+    const {login} = useContext(UserContext);
 
     useEffect(()=>{
         if(login) navigate("/plans")
