@@ -13,7 +13,7 @@ export default function Home(){
     const {login} = useContext(UserContext);
 
     useEffect(()=>{
-        if(login) navigate("/plans")
+        if(login && !login.user.planId) navigate("/plans")
     },[login,navigate])
 
     return(

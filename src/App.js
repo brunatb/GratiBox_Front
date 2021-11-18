@@ -5,9 +5,11 @@ import UserContext from "./context/UserContext";
 import { getFromLocalStorage } from "./utils/localStorage";
 export default function App() {
   const [login, setLogin]= useState(getFromLocalStorage())
+  const [choosenPlan,setChoosenPlan]= useState('month');
+
   return (
     <BodyApp>
-      <UserContext.Provider value={{login,setLogin}}>
+      <UserContext.Provider value={{login,setLogin,choosenPlan,setChoosenPlan}}>
         <Outlet/>
       </UserContext.Provider>
     </BodyApp>
