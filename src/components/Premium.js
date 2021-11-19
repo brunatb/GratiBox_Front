@@ -5,18 +5,42 @@ import UserContext from "../context/UserContext";
 import StyledDescription from "../styles/StyleDescription";
 import StyledTitle from "../styles/StyledTitle";
 import image from "../imgs/image03.jpg"
+import StyledButton from "../styles/StyledButton";
 
 export default function Premium(){
-    const {login, choosenPlan} = useContext(UserContext);
+    const {login, choosenPlan, setChoosenPlan} = useContext(UserContext);
     const navigate=useNavigate();
     const [isPlanOpen, setIsPlanOpen]=useState("open")
     const [isDeliveryOpen, setIsDeliveryOpen]=useState("closed")
     const [isProductsOpen, setIsProductsOpen]=useState("closed")
+    const [monday, setMonday]= useState("")
+    const [wednesday, setWednesday]= useState("")
+    const [friday, setFriday]= useState("")
+    const [tea, setTea]= useState("")
+    const [incense, setIncense]= useState("")
+    const [organicProduct, setOrganicProduct]=useState("")
 
     useEffect(()=>{
         if(!login) navigate("/")
         else if(login.user.planId) navigate("/plan");
     },[login,navigate])
+
+    function subscribe(){
+        let body = {};
+        body.type=choosenPlan;
+        if(choosenPlan==='week' && monday==="checked") body.weekday="monday"
+        else if(choosenPlan==='week' && wednesday==="checked") body.weekday="wednesday"
+        else if(choosenPlan==='week' && friday==="checked") body.weekday="friday"
+        else if(choosenPlan==='month' && monday==="checked") body.monthday="dayOne"
+        else if(choosenPlan==='month' && wednesday==="checked") body.monthday="dayTen"
+        else if(choosenPlan==='month' && friday==="checked") body.monthday="dayTwenty"
+        else return alert("Escolha o dia da entrega")
+        tea === "checked" ? body.tea=true : body.tea=false
+        incense === "checked" ? body.incense=true : body.incense=false
+        organicProduct === "checked" ? body.organicProduct=true : body.organicProduct=false
+        if(body.organicProduct === false && body.incense===false && body.tea===false) return alert("Escolha o item que deseja receber")
+        console.log(body)
+    }
 
     return (
         <>
@@ -37,18 +61,18 @@ export default function Premium(){
                                             <input type="radio" name="plan" id="month" checked="checked"/>
                                             <label for="month">Plano Mensal</label>
                                         </div>
-                                        <div>
+                                        <div onClick={()=> setChoosenPlan('week')}>
                                             <input type="radio" name="plan" id="week"/>
                                             <label for="week">Plano Semanal</label>
                                         </div>
                                     </div>
                                 :
                                     <div>
-                                        <div>
+                                        <div onClick={()=> setChoosenPlan('month')}>
                                             <input type="radio" name="plan" id="month"/>
                                             <label for="month">Plano Mensal</label>
                                         </div>
-                                        <div>
+                                        <div >
                                             <input type="radio" name="plan" id="week" checked="checked"/>
                                             <label for="week">Plano Semanal</label>
                                         </div>
@@ -64,20 +88,98 @@ export default function Premium(){
                     {isDeliveryOpen === 'open' ? 
                         <div className="open">
                             <span onClick={()=> setIsDeliveryOpen("closed")}>Entrega</span>
+                            {choosenPlan==="week" ?
+                                <div>
+                                    <div>
+                                        <input type="checkbox" 
+                                        name="delivery" 
+                                        id="monday" 
+                                        checked={monday}
+                                        onChange={e=>{
+                                            setMonday("checked")
+                                            setWednesday("")
+                                            setFriday("")
+                                            }
+                                        }
+                                    />
+                                        <label for="monday">Segunda-feira</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" 
+                                        name="delivery" 
+                                        id="wednesday" 
+                                        checked={wednesday}
+                                        onChange={e=>{
+                                            setMonday("")
+                                            setWednesday("checked")
+                                            setFriday("")
+                                            }
+                                        }
+                                    />
+                                        <label for="wednesday">Quarta-feira</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" 
+                                            name="delivery" 
+                                            id="friday"
+                                            checked={friday}
+                                            onChange={e=>{
+                                                setMonday("")
+                                                setWednesday("")
+                                                setFriday("checked")
+                                                }
+                                            }
+                                    />
+                                        <label for="friday">Sexta-feira</label>
+                                    </div>
+                                </div>
+                            :
                             <div>
                                 <div>
-                                    <input type="radio" name="delivery" id="monday"/>
-                                    <label for="monday">Segunda-feira</label>
+                                    <input type="checkbox" 
+                                    name="delivery" 
+                                    id="dayOne" 
+                                    checked={monday}
+                                    onChange={e=>{
+                                        setMonday("checked")
+                                        setWednesday("")
+                                        setFriday("")
+                                        }
+                                    }
+                                />
+                                    <label for="dayOne">Dia 01</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="delivery" id="wednesday"/>
-                                    <label for="wednesday">Quarta-feira</label>
+                                    <input type="checkbox" 
+                                    name="delivery" 
+                                    id="dayTen" 
+                                    checked={wednesday}
+                                    onChange={e=>{
+                                        setMonday("")
+                                        setWednesday("checked")
+                                        setFriday("")
+                                        }
+                                    }
+                                />
+                                    <label for="dayTen">Dia 10</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="delivery" id="friday"/>
-                                    <label for="friday">Sexta-feira</label>
+                                    <input type="checkbox" 
+                                        name="delivery" 
+                                        id="dayTwenty"
+                                        checked={friday}
+                                        onChange={e=>{
+                                            setMonday("")
+                                            setWednesday("")
+                                            setFriday("checked")
+                                            }
+                                        }
+                                />
+                                    <label for="dayTwenty">Dia 20</label>
                                 </div>
                             </div>
+                            }
+                            
                         </div>
                     :
                         <div className="closed" onClick={()=> setIsDeliveryOpen("open")}>
@@ -89,15 +191,42 @@ export default function Premium(){
                             <span onClick={()=> setIsProductsOpen("closed")}>Quero Receber</span>
                             <div>
                                 <div>
-                                    <input type="checkbox" name="products" id="tea"/>
+                                    <input 
+                                        type="checkbox" 
+                                        name="products" 
+                                        id="tea"
+                                        checked={tea}
+                                        onChange={e=>{
+                                            tea === 'checked' ? setTea("") : setTea("checked")
+                                            }
+                                        }
+                                    />
                                     <label for="tea">Chás</label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" name="products" id="incense"/>
+                                <input 
+                                        type="checkbox" 
+                                        name="products" 
+                                        id="incense"
+                                        checked={incense}
+                                        onChange={e=>{
+                                            incense === 'checked' ? setIncense("") : setIncense("checked")
+                                            }
+                                        }
+                                    />
                                     <label for="incense">Incensos</label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" name="products" id="organicProduct"/>
+                                <input 
+                                        type="checkbox" 
+                                        name="products" 
+                                        id="organicProduct"
+                                        checked={organicProduct}
+                                        onChange={e=>{
+                                            organicProduct === 'checked' ? setOrganicProduct("") : setOrganicProduct("checked")
+                                            }
+                                        }
+                                    />
                                     <label for="organicProduct">Produtos Orgânicos</label>
                                 </div>
                             </div>
@@ -108,6 +237,7 @@ export default function Premium(){
                         </div>
                     }
                 </StyledCard>
+                <StyledButton onClick={subscribe}>Próximo</StyledButton>
             </>
             :
                 <p>Carregando...</p>
