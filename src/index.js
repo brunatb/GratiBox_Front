@@ -19,12 +19,7 @@ render(
         <Route path="sign-in" element={<SignIn/>}/>
         <Route path="plans" element={<Plans/>}/>
         <Route path="premium" element={<Premium/>}/>
-        <Route path="*" element={
-            <main style={{ padding: "1rem" }}>
-              <p>There's nothing here!</p>
-            </main>
-          }
-        />
+        <Route path="*" element={<NoRoute/>}/>
       </Route>
     </Routes>
   </BrowserRouter>,
