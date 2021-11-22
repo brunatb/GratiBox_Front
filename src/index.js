@@ -7,6 +7,8 @@ import SignIn from "./components/SignIn";
 import ResetCss from "./styles/ResetCss";
 import Plans from "./components/Plans"
 import Premium from "./components/Premium";
+import NoRoute from "./components/NoRoute"
+import Plan from "./components/Plan";
 
 
 render(
@@ -19,12 +21,8 @@ render(
         <Route path="sign-in" element={<SignIn/>}/>
         <Route path="plans" element={<Plans/>}/>
         <Route path="premium" element={<Premium/>}/>
-        <Route path="*" element={
-            <main style={{ padding: "1rem" }}>
-              <p>There's nothing here!</p>
-            </main>
-          }
-        />
+        <Route path="/plan" element={<Plan/>}/>
+        <Route path="*" element={<NoRoute/>}/>
       </Route>
     </Routes>
   </BrowserRouter>,
