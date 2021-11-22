@@ -21,7 +21,6 @@ export default function Premium() {
   const [tea, setTea] = useState('');
   const [incense, setIncense] = useState('');
   const [organicProduct, setOrganicProduct] = useState('');
-  const { token } = login;
 
   useEffect(() => {
     if (!login) navigate('/');
@@ -42,7 +41,7 @@ export default function Premium() {
     incense === 'checked' ? body.incense = true : body.incense = false;
     organicProduct === 'checked' ? body.organicProduct = true : body.organicProduct = false;
     if (body.organicProduct === false && body.incense === false && body.tea === false) return alert('Escolha o item que deseja receber');
-    postPlan(token, body)
+    postPlan(login.token, body)
       .then((res) => {
         alert('Plano realizado com sucesso');
         updateLocalStorage(res.data);

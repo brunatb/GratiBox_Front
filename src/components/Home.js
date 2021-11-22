@@ -14,6 +14,7 @@ export default function Home() {
 
   useEffect(() => {
     if (login && !login.user.planId) navigate('/plans');
+    if (login && login.user.planId) navigate('/plan');
   }, [login, navigate]);
 
   return (
