@@ -1,34 +1,34 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
 import imagem from '../imgs/image05.webp';
-import StyledTitle from "../styles/StyledTitle";
-import StyledText from "../styles/StyledText";
-import StyledDiv from "../styles/StyledDiv";
-import { useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
-import UserContext from "../context/UserContext";
-import StyledDescription from "../styles/StyleDescription";
+import StyledTitle from '../styles/StyledTitle';
+import StyledText from '../styles/StyledText';
+import StyledDiv from '../styles/StyledDiv';
+import UserContext from '../context/UserContext';
+import StyledDescription from '../styles/StyleDescription';
 
-export default function Home(){
-    let navigate=useNavigate();
-    const {login} = useContext(UserContext);
+export default function Home() {
+  const navigate = useNavigate();
+  const { login } = useContext(UserContext);
 
-    useEffect(()=>{
-        if(login && !login.user.planId) navigate("/plans")
-    },[login,navigate])
+  useEffect(() => {
+    if (login && !login.user.planId) navigate('/plans');
+  }, [login, navigate]);
 
-    return(
-        <>
-            <StyledTitle> Bem vindo ao GratiBox</StyledTitle>
-            <StyledDescription>
-                Receba em casa um box com chás, produtos orgânicos, incensos e muito mais...
-            </StyledDescription>
-            <StyledImg src={imagem} alt=""/>
-            <StyledDiv>
-                <StyledButton onClick={()=> navigate("/sign-up")}>Quero começar</StyledButton>
-                <StyledText onClick={()=> navigate("/sign-in")}>Já sou grato</StyledText>
-            </StyledDiv>
-        </>
-    )
+  return (
+    <>
+      <StyledTitle> Bem vindo ao GratiBox</StyledTitle>
+      <StyledDescription>
+        Receba em casa um box com chás, produtos orgânicos, incensos e muito mais...
+      </StyledDescription>
+      <StyledImg src={imagem} alt="" />
+      <StyledDiv>
+        <StyledButton onClick={() => navigate('/sign-up')}>Quero começar</StyledButton>
+        <StyledText onClick={() => navigate('/sign-in')}>Já sou grato</StyledText>
+      </StyledDiv>
+    </>
+  );
 }
 
 const StyledImg = styled.img`

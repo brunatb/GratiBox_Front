@@ -1,249 +1,273 @@
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import styled from "styled-components";
-import UserContext from "../context/UserContext";
-import StyledDescription from "../styles/StyleDescription";
-import StyledTitle from "../styles/StyledTitle";
-import image from "../imgs/image03.jpg"
-import StyledButton from "../styles/StyledButton";
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import styled from 'styled-components';
+import UserContext from '../context/UserContext';
+import StyledDescription from '../styles/StyleDescription';
+import StyledTitle from '../styles/StyledTitle';
+import image from '../imgs/image03.jpg';
+import StyledButton from '../styles/StyledButton';
+import { postPlan } from '../services/API';
+import { updateLocalStorage } from '../utils/localStorage';
 
-export default function Premium(){
-    const {login, choosenPlan, setChoosenPlan} = useContext(UserContext);
-    const navigate=useNavigate();
-    const [isPlanOpen, setIsPlanOpen]=useState("open")
-    const [isDeliveryOpen, setIsDeliveryOpen]=useState("closed")
-    const [isProductsOpen, setIsProductsOpen]=useState("closed")
-    const [monday, setMonday]= useState("")
-    const [wednesday, setWednesday]= useState("")
-    const [friday, setFriday]= useState("")
-    const [tea, setTea]= useState("")
-    const [incense, setIncense]= useState("")
-    const [organicProduct, setOrganicProduct]=useState("")
+export default function Premium() {
+  const { login, choosenPlan, setChoosenPlan } = useContext(UserContext);
+  const navigate = useNavigate();
+  const [isPlanOpen, setIsPlanOpen] = useState('open');
+  const [isDeliveryOpen, setIsDeliveryOpen] = useState('closed');
+  const [isProductsOpen, setIsProductsOpen] = useState('closed');
+  const [monday, setMonday] = useState('');
+  const [wednesday, setWednesday] = useState('');
+  const [friday, setFriday] = useState('');
+  const [tea, setTea] = useState('');
+  const [incense, setIncense] = useState('');
+  const [organicProduct, setOrganicProduct] = useState('');
+  const { token } = login;
 
-    useEffect(()=>{
-        if(!login) navigate("/")
-        else if(login.user.planId) navigate("/plan");
-    },[login,navigate])
+  useEffect(() => {
+    if (!login) navigate('/');
+    else if (login.user.planId) navigate('/plan');
+  }, [login, navigate]);
 
-    function subscribe(){
-        let body = {};
-        body.type=choosenPlan;
-        if(choosenPlan==='week' && monday==="checked") body.weekday="monday"
-        else if(choosenPlan==='week' && wednesday==="checked") body.weekday="wednesday"
-        else if(choosenPlan==='week' && friday==="checked") body.weekday="friday"
-        else if(choosenPlan==='month' && monday==="checked") body.monthday="dayOne"
-        else if(choosenPlan==='month' && wednesday==="checked") body.monthday="dayTen"
-        else if(choosenPlan==='month' && friday==="checked") body.monthday="dayTwenty"
-        else return alert("Escolha o dia da entrega")
-        tea === "checked" ? body.tea=true : body.tea=false
-        incense === "checked" ? body.incense=true : body.incense=false
-        organicProduct === "checked" ? body.organicProduct=true : body.organicProduct=false
-        if(body.organicProduct === false && body.incense===false && body.tea===false) return alert("Escolha o item que deseja receber")
-        console.log(body)
-    }
+  function subscribe() {
+    const body = {};
+    body.type = choosenPlan;
+    if (choosenPlan === 'week' && monday === 'checked') body.day = 'monday';
+    else if (choosenPlan === 'week' && wednesday === 'checked') body.day = 'wednesday';
+    else if (choosenPlan === 'week' && friday === 'checked') body.day = 'friday';
+    else if (choosenPlan === 'month' && monday === 'checked') body.day = 'dayOne';
+    else if (choosenPlan === 'month' && wednesday === 'checked') body.day = 'dayTen';
+    else if (choosenPlan === 'month' && friday === 'checked') body.day = 'dayTwenty';
+    else return alert('Escolha o dia da entrega');
+    tea === 'checked' ? body.tea = true : body.tea = false;
+    incense === 'checked' ? body.incense = true : body.incense = false;
+    organicProduct === 'checked' ? body.organicProduct = true : body.organicProduct = false;
+    if (body.organicProduct === false && body.incense === false && body.tea === false) return alert('Escolha o item que deseja receber');
+    postPlan(token, body)
+      .then((res) => {
+        alert('Plano realizado com sucesso');
+        updateLocalStorage(res.data);
+        navigate('/plan');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
-    return (
-        <>
-            {login ?
-            <>
-                <StyledTitle> Bom te ver por aqui, {login.user.name}. </StyledTitle>
-                <StyledDescription>
-                    “Agradecer é arte de atrair coisas boas”
-                </StyledDescription>
-                <StyledCard>
-                    <img src={image} alt=""/>
-                    {isPlanOpen === 'open' ? 
-                        <div className="open">
-                            <span onClick={()=> setIsPlanOpen("closed")}>Plano</span>
-                                {choosenPlan === 'month' ?
-                                    <div>
-                                        <div>
-                                            <input type="radio" name="plan" id="month" checked="checked"/>
-                                            <label for="month">Plano Mensal</label>
-                                        </div>
-                                        <div onClick={()=> setChoosenPlan('week')}>
-                                            <input type="radio" name="plan" id="week"/>
-                                            <label for="week">Plano Semanal</label>
-                                        </div>
-                                    </div>
-                                :
-                                    <div>
-                                        <div onClick={()=> setChoosenPlan('month')}>
-                                            <input type="radio" name="plan" id="month"/>
-                                            <label for="month">Plano Mensal</label>
-                                        </div>
-                                        <div >
-                                            <input type="radio" name="plan" id="week" checked="checked"/>
-                                            <label for="week">Plano Semanal</label>
-                                        </div>
-                                    </div>
+  return (
+    <>
+      {login
+        ? (
+          <>
+            <StyledTitle>
+              {' '}
+              Bom te ver por aqui,
+              {' '}
+              {login.user.name}
+              .
+              {' '}
+            </StyledTitle>
+            <StyledDescription>
+              “Agradecer é arte de atrair coisas boas”
+            </StyledDescription>
+            <StyledCard>
+              <img src={image} alt="" />
+              {isPlanOpen === 'open'
+                ? (
+                  <div className="open">
+                    <span onClick={() => setIsPlanOpen('closed')}>Plano</span>
+                    {choosenPlan === 'month'
+                      ? (
+                        <div>
+                          <div>
+                            <input type="radio" name="plan" id="month" checked="checked" />
+                            <label htmlFor="month">Plano Mensal</label>
+                          </div>
+                          <div onClick={() => setChoosenPlan('week')}>
+                            <input type="radio" name="plan" id="week" />
+                            <label htmlFor="week">Plano Semanal</label>
+                          </div>
+                        </div>
+                      )
+                      : (
+                        <div>
+                          <div onClick={() => setChoosenPlan('month')}>
+                            <input type="radio" name="plan" id="month" />
+                            <label htmlFor="month">Plano Mensal</label>
+                          </div>
+                          <div>
+                            <input type="radio" name="plan" id="week" checked="checked" />
+                            <label htmlFor="week">Plano Semanal</label>
+                          </div>
+                        </div>
+                      )}
+                  </div>
+                )
+                : (
+                  <div className="closed" onClick={() => setIsPlanOpen('open')}>
+                    <span>Plano</span>
+                  </div>
+                )}
+              {isDeliveryOpen === 'open'
+                ? (
+                  <div className="open">
+                    <span onClick={() => setIsDeliveryOpen('closed')}>Entrega</span>
+                    {choosenPlan === 'week'
+                      ? (
+                        <div>
+                          <div>
+                            <input
+                              type="checkbox"
+                              name="delivery"
+                              id="monday"
+                              checked={monday}
+                              onChange={(e) => {
+                                setMonday('checked');
+                                setWednesday('');
+                                setFriday('');
+                              }}
+                            />
+                            <label htmlFor="monday">Segunda-feira</label>
+                          </div>
+                          <div>
+                            <input
+                              type="checkbox"
+                              name="delivery"
+                              id="wednesday"
+                              checked={wednesday}
+                              onChange={(e) => {
+                                setMonday('');
+                                setWednesday('checked');
+                                setFriday('');
+                              }}
+                            />
+                            <label htmlFor="wednesday">Quarta-feira</label>
+                          </div>
+                          <div>
+                            <input
+                              type="checkbox"
+                              name="delivery"
+                              id="friday"
+                              checked={friday}
+                              onChange={(e) => {
+                                setMonday('');
+                                setWednesday('');
+                                setFriday('checked');
+                              }}
+                            />
+                            <label htmlFor="friday">Sexta-feira</label>
+                          </div>
+                        </div>
+                      )
+                      : (
+                        <div>
+                          <div>
+                            <input
+                              type="checkbox"
+                              name="delivery"
+                              id="dayOne"
+                              checked={monday}
+                              onChange={(e) => {
+                                setMonday('checked');
+                                setWednesday('');
+                                setFriday('');
+                              }}
+                            />
+                            <label htmlFor="dayOne">Dia 01</label>
+                          </div>
+                          <div>
+                            <input
+                              type="checkbox"
+                              name="delivery"
+                              id="dayTen"
+                              checked={wednesday}
+                              onChange={(_e) => {
+                                setMonday('');
+                                setWednesday('checked');
+                                setFriday('');
+                              }}
+                            />
+                            <label htmlFor="dayTen">Dia 10</label>
+                          </div>
+                          <div>
+                            <input
+                              type="checkbox"
+                              name="delivery"
+                              id="dayTwenty"
+                              checked={friday}
+                              onChange={(e) => {
+                                setMonday('');
+                                setWednesday('');
+                                setFriday('checked');
+                              }}
+                            />
+                            <label htmlFor="dayTwenty">Dia 20</label>
+                          </div>
+                        </div>
+                      )}
 
-                                }
-                        </div>
-                    :
-                        <div className="closed" onClick={()=> setIsPlanOpen("open")}>
-                            <span>Plano</span>
-                        </div>
-                    }
-                    {isDeliveryOpen === 'open' ? 
-                        <div className="open">
-                            <span onClick={()=> setIsDeliveryOpen("closed")}>Entrega</span>
-                            {choosenPlan==="week" ?
-                                <div>
-                                    <div>
-                                        <input type="checkbox" 
-                                        name="delivery" 
-                                        id="monday" 
-                                        checked={monday}
-                                        onChange={e=>{
-                                            setMonday("checked")
-                                            setWednesday("")
-                                            setFriday("")
-                                            }
-                                        }
-                                    />
-                                        <label for="monday">Segunda-feira</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" 
-                                        name="delivery" 
-                                        id="wednesday" 
-                                        checked={wednesday}
-                                        onChange={e=>{
-                                            setMonday("")
-                                            setWednesday("checked")
-                                            setFriday("")
-                                            }
-                                        }
-                                    />
-                                        <label for="wednesday">Quarta-feira</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" 
-                                            name="delivery" 
-                                            id="friday"
-                                            checked={friday}
-                                            onChange={e=>{
-                                                setMonday("")
-                                                setWednesday("")
-                                                setFriday("checked")
-                                                }
-                                            }
-                                    />
-                                        <label for="friday">Sexta-feira</label>
-                                    </div>
-                                </div>
-                            :
-                            <div>
-                                <div>
-                                    <input type="checkbox" 
-                                    name="delivery" 
-                                    id="dayOne" 
-                                    checked={monday}
-                                    onChange={e=>{
-                                        setMonday("checked")
-                                        setWednesday("")
-                                        setFriday("")
-                                        }
-                                    }
-                                />
-                                    <label for="dayOne">Dia 01</label>
-                                </div>
-                                <div>
-                                    <input type="checkbox" 
-                                    name="delivery" 
-                                    id="dayTen" 
-                                    checked={wednesday}
-                                    onChange={e=>{
-                                        setMonday("")
-                                        setWednesday("checked")
-                                        setFriday("")
-                                        }
-                                    }
-                                />
-                                    <label for="dayTen">Dia 10</label>
-                                </div>
-                                <div>
-                                    <input type="checkbox" 
-                                        name="delivery" 
-                                        id="dayTwenty"
-                                        checked={friday}
-                                        onChange={e=>{
-                                            setMonday("")
-                                            setWednesday("")
-                                            setFriday("checked")
-                                            }
-                                        }
-                                />
-                                    <label for="dayTwenty">Dia 20</label>
-                                </div>
-                            </div>
-                            }
-                            
-                        </div>
-                    :
-                        <div className="closed" onClick={()=> setIsDeliveryOpen("open")}>
-                            <span>Entrega</span>
-                        </div>
-                    }
-                    {isProductsOpen === 'open' ? 
-                        <div className="open" >
-                            <span onClick={()=> setIsProductsOpen("closed")}>Quero Receber</span>
-                            <div>
-                                <div>
-                                    <input 
-                                        type="checkbox" 
-                                        name="products" 
-                                        id="tea"
-                                        checked={tea}
-                                        onChange={e=>{
-                                            tea === 'checked' ? setTea("") : setTea("checked")
-                                            }
-                                        }
-                                    />
-                                    <label for="tea">Chás</label>
-                                </div>
-                                <div>
-                                <input 
-                                        type="checkbox" 
-                                        name="products" 
-                                        id="incense"
-                                        checked={incense}
-                                        onChange={e=>{
-                                            incense === 'checked' ? setIncense("") : setIncense("checked")
-                                            }
-                                        }
-                                    />
-                                    <label for="incense">Incensos</label>
-                                </div>
-                                <div>
-                                <input 
-                                        type="checkbox" 
-                                        name="products" 
-                                        id="organicProduct"
-                                        checked={organicProduct}
-                                        onChange={e=>{
-                                            organicProduct === 'checked' ? setOrganicProduct("") : setOrganicProduct("checked")
-                                            }
-                                        }
-                                    />
-                                    <label for="organicProduct">Produtos Orgânicos</label>
-                                </div>
-                            </div>
-                        </div>
-                    :
-                        <div className="closed" onClick={()=> setIsProductsOpen("open")}>
-                            <span>Quero Receber</span>
-                        </div>
-                    }
-                </StyledCard>
-                <StyledButton onClick={subscribe}>Próximo</StyledButton>
-            </>
-            :
-                <p>Carregando...</p>
-            }
-        </>
-    )
+                  </div>
+                )
+                : (
+                  <div className="closed" onClick={() => setIsDeliveryOpen('open')}>
+                    <span>Entrega</span>
+                  </div>
+                )}
+              {isProductsOpen === 'open'
+                ? (
+                  <div className="open">
+                    <span onClick={() => setIsProductsOpen('closed')}>Quero Receber</span>
+                    <div>
+                      <div>
+                        <input
+                          type="checkbox"
+                          name="products"
+                          id="tea"
+                          checked={tea}
+                          onChange={(e) => {
+                            tea === 'checked' ? setTea('') : setTea('checked');
+                          }}
+                        />
+                        <label htmlFor="tea">Chás</label>
+                      </div>
+                      <div>
+                        <input
+                          type="checkbox"
+                          name="products"
+                          id="incense"
+                          checked={incense}
+                          onChange={(e) => {
+                            incense === 'checked' ? setIncense('') : setIncense('checked');
+                          }}
+                        />
+                        <label htmlFor="incense">Incensos</label>
+                      </div>
+                      <div>
+                        <input
+                          type="checkbox"
+                          name="products"
+                          id="organicProduct"
+                          checked={organicProduct}
+                          onChange={(e) => {
+                            organicProduct === 'checked' ? setOrganicProduct('') : setOrganicProduct('checked');
+                          }}
+                        />
+                        <label htmlFor="organicProduct">Produtos Orgânicos</label>
+                      </div>
+                    </div>
+                  </div>
+                )
+                : (
+                  <div className="closed" onClick={() => setIsProductsOpen('open')}>
+                    <span>Quero Receber</span>
+                  </div>
+                )}
+            </StyledCard>
+            <StyledButton onClick={subscribe}>Próximo</StyledButton>
+          </>
+        )
+        : <p>Carregando...</p>}
+    </>
+  );
 }
 
 const StyledCard = styled.div`

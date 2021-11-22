@@ -7,7 +7,13 @@ function saveToLocalStorage(login){
     localStorage.setItem("login", JSON.stringify(login));
 }
 
+function updateLocalStorage(login){
+    localStorage.clear()
+    localStorage.setItem("login", JSON.stringify(login));
+}
+
 export {
     getFromLocalStorage,
-    saveToLocalStorage
+    saveToLocalStorage,
+    updateLocalStorage
 }
