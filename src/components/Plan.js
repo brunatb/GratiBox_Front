@@ -7,13 +7,12 @@ import styled from "styled-components"
 import { getPlan } from "../services/API"
 export default function Plan(){
     const {login} =useContext(UserContext)
-    const [plan, setPlan] = useState({})
+    const [plan, setPlan] = useState()
 
     useEffect(()=>{
         getPlan(login.token)
         .then(res=>{
             setPlan(res.data)
-            console.log(res.data)
         })
         .catch(err=>{
             console.error(err)
